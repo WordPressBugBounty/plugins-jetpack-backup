@@ -39,7 +39,7 @@ class Initializer {
 	 *
 	 * @var string
 	 */
-	const PACKAGE_VERSION = '5.16.8';
+	const PACKAGE_VERSION = '5.26.1';
 
 	/**
 	 * HTML container ID for the IDC screen on My Jetpack page.
@@ -179,17 +179,22 @@ class Initializer {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce needed for redirect flow control
 		$step = isset( $_GET['step'] ) ? sanitize_text_field( wp_unslash( $_GET['step'] ) ) : '';
 
-		// If the user is not connected, redirect to the onboarding page
-		if ( ! $connection->is_connected() && $step !== 'onboarding' ) {
-			$admin_page = add_query_arg(
-				array(
-					'page' => 'my-jetpack',
-					'step' => 'onboarding',
-				),
-				admin_url( 'admin.php' )
-			);
+		// Handle onboarding redirects based on connection status
+		$should_redirect = false;
+		$redirect_args   = array( 'page' => 'my-jetpack' );
 
-			$location = wp_sanitize_redirect( $admin_page );
+		if ( ! $connection->is_connected() && $step !== 'onboarding' ) {
+			// Redirect to onboarding if not connected
+			$redirect_args['step'] = 'onboarding';
+			$should_redirect       = true;
+		} elseif ( $connection->is_connected() && $step === 'onboarding' ) {
+			// Redirect away from onboarding if already connected
+			$should_redirect = true;
+		}
+
+		if ( $should_redirect ) {
+			$admin_page = add_query_arg( $redirect_args, admin_url( 'admin.php' ) );
+			$location   = wp_sanitize_redirect( $admin_page );
 
 			// Remove wp_get_referer filter applied in `fix_redirect` method of `Jetpack_Admin` class
 			remove_filter( 'wp_redirect', 'wp_get_referer' );
@@ -206,10 +211,6 @@ class Initializer {
 		self::$site_info = self::get_site_info();
 		add_filter( 'identity_crisis_container_id', array( static::class, 'get_idc_container_id' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
-		// Product statuses are constantly changing, so we never want to cache the page.
-		header( 'Cache-Control: no-cache, no-store, must-revalidate' );
-		header( 'Pragma: no-cache' );
-		header( 'Expires: 0' );
 	}
 
 	/**
@@ -348,9 +349,6 @@ class Initializer {
 		$plugin_slugs = array_map(
 			static function ( $slug ) {
 				$parts = explode( '/', $slug );
-				if ( empty( $parts ) ) {
-					return '';
-				}
 				// Return the last segment of the filepath without the PHP extension
 				return str_replace( '.php', '', $parts[ count( $parts ) - 1 ] );
 			},
@@ -405,9 +403,6 @@ class Initializer {
 		$plugin_slugs              = array_map(
 			static function ( $slug ) {
 				$parts = explode( '/', $slug );
-				if ( empty( $parts ) ) {
-					return '';
-				}
 				// Return the last segment of the filepath without the PHP extension
 				return str_replace( '.php', '', $parts[ count( $parts ) - 1 ] );
 			},
@@ -509,10 +504,6 @@ class Initializer {
 	 */
 	public static function should_initialize() {
 		$should = true;
-
-		if ( is_multisite() ) {
-			$should = false;
-		}
 
 		// All options presented in My Jetpack require a connection to WordPress.com.
 		if ( ( new Status() )->is_offline_mode() ) {
@@ -700,6 +691,14 @@ class Initializer {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
+
+		// Don't show any red bubbles when Jetpack is disconnected
+		// Users can't act on most alerts without a connection
+		$connection = new Connection_Manager();
+		if ( ! $connection->is_connected() ) {
+			return;
+		}
+
 		$rbn = new Red_Bubble_Notifications();
 
 		// filters for the items in this file

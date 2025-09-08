@@ -4,15 +4,15 @@
 	"type": "library",
 	"license": "GPL-2.0-or-later",
 	"require": {
-		"automattic/jetpack-autoloader": "^5.0.8",
-		"automattic/jetpack-backup": "^4.2.8",
+		"automattic/jetpack-autoloader": "^5.0.9",
+		"automattic/jetpack-backup": "^4.2.20",
 		"automattic/jetpack-composer-plugin": "^4.0.5",
-		"automattic/jetpack-my-jetpack": "^5.16.8",
-		"automattic/jetpack-status": "^5.3.1"
+		"automattic/jetpack-my-jetpack": "^5.26.1",
+		"automattic/jetpack-status": "^6.0.4"
 	},
 	"require-dev": {
 		"yoast/phpunit-polyfills": "^4.0.0",
-		"automattic/jetpack-changelogger": "^6.0.5",
+		"automattic/jetpack-changelogger": "^6.0.6",
 		"automattic/phpunit-select-config": "^1.0.3"
 	},
 	"autoload": {
@@ -27,7 +27,7 @@
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"config": {
-		"autoloader-suffix": "9559eef123208b7d1b9c15b978567267_backupⓥ3_4",
+		"autoloader-suffix": "9559eef123208b7d1b9c15b978567267_backupⓥ3_5",
 		"allow-plugins": {
 			"automattic/jetpack-autoloader": true,
 			"automattic/jetpack-composer-plugin": true
