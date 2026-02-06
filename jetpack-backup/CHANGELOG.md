@@ -4,12 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [3.5] - 2025-09-08
+## [3.7.1] - 2025-11-20
+### Fixed
+- Jetpack: Remove getIconColor functions for block icons. [#45992]
+- My Jetpack: Fix expiring renewal prompt to show all products. [#45995]
+
+## [3.6] - 2025-11-12
 ### Added
-- My Jetpack: Added analytics for empty product search results. [#44344]
+- Tested up to WordPress 6.9. [#45571]
 
 ### Changed
-- - Remove CRM installation nudge for Complete plan users. [#45026]
+- Update package dependencies. [#45478]
+
+### Fixed
+- My Jetpack page: Fix visual compatibility issue with Hello Dolly plugin. [#45474]
+
+## [3.5] - 2025-09-08
+### Added
+- My Jetpack: Add analytics for empty product search results. [#44344]
+
+### Changed
+- Remove CRM installation nudge for Complete plan users. [#45026]
 - My Jetpack: Enable access to My Jetpack on WP Multisite. [#44260]
 - My Jetpack: Fix multisite availability check for restricted products and modules. [#44710]
 - My Jetpack: Unify the user connection flow with a unified screen. [#44469]
@@ -327,6 +342,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Use `absoluteRuntime` in babel JS build to avoid module not found errors.
 
 [2.2-beta]: https://github.com/Automattic/jetpack-backup-plugin/compare/2.1...2.2-beta
+[3.7.1]: https://github.com/Automattic/jetpack-backup-plugin/compare/3.6...3.7.1
+[3.6]: https://github.com/Automattic/jetpack-backup-plugin/compare/3.5...3.6
 [3.5]: https://github.com/Automattic/jetpack-backup-plugin/compare/3.4...3.5
 [3.4]: https://github.com/Automattic/jetpack-backup-plugin/compare/3.3...3.4
 [3.3]: https://github.com/Automattic/jetpack-backup-plugin/compare/3.2...3.3

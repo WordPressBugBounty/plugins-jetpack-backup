@@ -7,6 +7,7 @@
 
 namespace Automattic\Jetpack\Sync\Modules;
 
+use Automattic\Jetpack\Connection\Manager;
 use Automattic\Jetpack\Constants as Jetpack_Constants;
 use Automattic\Jetpack\Password_Checker;
 use Automattic\Jetpack\Sync\Defaults;
@@ -253,6 +254,8 @@ class Users extends Module {
 			$user->locale = get_user_locale( $user->ID );
 		}
 
+		$user->is_connected = ( new Manager( 'jetpack' ) )->is_user_connected( $user->ID );
+
 		return $user;
 	}
 
@@ -362,7 +365,7 @@ class Users extends Module {
 	 * @param \WP_User $user       The user object.
 	 */
 	public function wp_login_handler( $user_login, $user = null ) {
-		if ( ! $user instanceof \WP_User ) {
+		if ( ! $user instanceof \WP_User || empty( $user->ID ) ) {
 			return;
 		}
 
